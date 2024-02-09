@@ -30,7 +30,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 class GenUtility():
     def __init__(self) -> None:
         # Used to output from a log file to get around subprocess limitations
-        self.log = "/home/sabrina/MinecraftServer/logs/latest.log"
+        self.log = "logs/latest.log"
         f = open(self.log)
         self.previous_content = f.read()
         f.close()
@@ -170,12 +170,10 @@ async def start_minecraft():
     global minecraft_server
     global server_on
     print('Starting Minecraft')
-    wd = '/home/sabrina/MinecraftServer'
-    cmd = f'java -Xms{RAM_AMOUNT}G -Xmx{RAM_AMOUNT}G -jar {wd}/server.jar nogui'
-    minecraft_server = Popen(args=cmd.split(" "), stdin=PIPE, text=True, cwd=wd)
+    cmd = f'java -Xms{RAM_AMOUNT}G -Xmx{RAM_AMOUNT}G -jar server.jar nogui'
+    minecraft_server = Popen(args=cmd.split(" "), stdin=PIPE, text=True)
     print(f"PID: {minecraft_server.pid}")
     server_on = True
-    #os.set_blocking(minecraft_server.stdout.fileno(), False)
 
 
 def stop_minecraft():
