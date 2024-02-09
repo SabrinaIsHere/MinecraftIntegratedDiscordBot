@@ -15,7 +15,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 # Amount of ram in gigabytes allocated to the minecraft server
-RAM_AMOUNT = 2
+RAM_AMOUNT = 3
 
 
 server_on = False
@@ -79,7 +79,7 @@ class ConsoleCog(commands.Cog):
     def cog_unload(self):
         self.printer.cancel()
 
-    @tasks.loop(seconds=1.0)
+    @tasks.loop(seconds=2.0)
     async def printer(self):
         if server_on:
             out = util.read()
@@ -170,7 +170,11 @@ async def start_minecraft():
     global minecraft_server
     global server_on
     print('Starting Minecraft')
-    cmd = f'java -Xms{RAM_AMOUNT}G -Xmx{RAM_AMOUNT}G -jar server.jar nogui'
+    SERVER_JAR="forge-1.12.2-14.23.5.2860.jar"
+    MIN_RAM="1024M"
+    MAX_RAM="4095M"
+    JAVA_PARAMETERS="-XX:+UseG1GC -Dsun.rmi.dgc.server.gcInterval=2147483646 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M -Dfml.readTimeout=180"
+    cmd = f'Java8/jre1.8.0_261/bin/java -server -Xms{MIN_RAM} -Xmx{MAX_RAM} {JAVA_PARAMETERS} -jar {SERVER_JAR} nogui'
     minecraft_server = Popen(args=cmd.split(" "), stdin=PIPE, text=True)
     print(f"PID: {minecraft_server.pid}")
     server_on = True
